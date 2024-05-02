@@ -20,6 +20,6 @@ export class MoviesService {
 
   create(movieData: CreateMovieDto) {
     const movie: Movie = this.moviesRepository.create(movieData);
-    console.log(movie);
+    return this.moviesRepository.save(movie);
   }
 }

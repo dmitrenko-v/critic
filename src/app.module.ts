@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './users/users.module';
+import { MoviesModule } from './movies/movies.module';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -17,6 +18,7 @@ import { UserModule } from './users/users.module';
       autoLoadEntities: true,
     }),
     UserModule,
+    MoviesModule,
   ],
   controllers: [],
   providers: [],
