@@ -1,19 +1,13 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class Movie {
   @PrimaryGeneratedColumn()
   id: string;
 
   @Column()
-  userName: string;
+  title: string;
 
   @Column()
-  firsName: string;
-
-  @Column()
-  secondName: string;
-
-  @Column()
-  password: string;
+  year: number;
 }
