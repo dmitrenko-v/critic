@@ -3,12 +3,14 @@ import { UsersService } from './users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/createUserDto';
+import { ConflictException } from '@nestjs/common';
 
 const users: User[] = [
   {
     id: '1',
     userName: 'userName1',
     firstName: 'firstName1',
+    secondName: 'secondName1',
     email: 'email1@gmail.com',
     password: 'password1',
   },
@@ -16,6 +18,7 @@ const users: User[] = [
     id: '2',
     userName: 'userName2',
     firstName: 'firstName2',
+    secondName: 'secondName2',
     email: 'email2@gmail.com',
     password: 'password2',
   },
@@ -30,6 +33,22 @@ const userToCreate: CreateUserDto = {
   password: 'password3',
 };
 
+const sameEmailUser: CreateUserDto = {
+  userName: 'userName4',
+  firstName: 'firstName2',
+  secondName: 'secondName2',
+  email: 'email2@gmail.com',
+  password: 'password2',
+};
+
+const sameUsernameUser: CreateUserDto = {
+  userName: 'userName2',
+  firstName: 'firstName2',
+  secondName: 'secondName2',
+  email: 'email5@gmail.com',
+  password: 'password2',
+};
+
 describe('UsersService', () => {
   let service: UsersService;
 
@@ -37,7 +56,9 @@ describe('UsersService', () => {
     find: jest.fn((): User[] => users),
     create: jest.fn((dto: CreateUserDto): CreateUserDto => dto),
     findOneBy: jest.fn(
-      (where: { userName: string } | { id: string } | { email: string }) =>
+      (
+        where: { userName: string } | { id: string } | { email: string },
+      ): User | null =>
         users.find((user) =>
           Object.keys(where).find(
             (key) =>
@@ -76,9 +97,17 @@ describe('UsersService', () => {
   });
 
   it('create user', async () => {
-    expect(await service.create(userToCreate)).toEqual({
+    expect(service.create(userToCreate)).resolves.toEqual({
       id: expect.any(Number),
       ...userToCreate,
     });
+  });
+
+  it('create user with existing email', async () => {
+    expect(service.create(sameEmailUser)).rejects.toThrow(ConflictException);
+  });
+
+  it('create user with existing username', async () => {
+    expect(service.create(sameUsernameUser)).rejects.toThrow(ConflictException);
   });
 });
