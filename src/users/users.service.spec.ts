@@ -92,22 +92,22 @@ describe('UsersService', () => {
     expect(service.findOne('1')).toEqual(user);
   });
 
-  it('findOne missing user', () => {
+  it('findOne missing user returns null', () => {
     expect(service.findOne('3')).toBeNull();
   });
 
-  it('create user', async () => {
+  it('Create user returns dto with id', async () => {
     expect(service.create(userToCreate)).resolves.toEqual({
       id: expect.any(Number),
       ...userToCreate,
     });
   });
 
-  it('create user with existing email', async () => {
+  it('create user with existing email throws error', async () => {
     expect(service.create(sameEmailUser)).rejects.toThrow(ConflictException);
   });
 
-  it('create user with existing username', async () => {
+  it('create user with existing username throws error', async () => {
     expect(service.create(sameUsernameUser)).rejects.toThrow(ConflictException);
   });
 });

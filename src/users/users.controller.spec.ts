@@ -1,6 +1,7 @@
 import { UsersController } from './users.controller';
 import { Test } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { User } from './users.entity';
 
 const users = [
   {
@@ -21,12 +22,14 @@ const users = [
 
 const user = users[0];
 
-describe('UserController', () => {
+describe('UsersController', () => {
   let controller: UsersController;
 
   const mockUsersService = {
-    findAll: jest.fn(() => users),
-    findOne: jest.fn((id) => users.find((user) => user.id === id) || null),
+    findAll: jest.fn((): User[] => users),
+    findOne: jest.fn(
+      (id: string): User | null => users.find((user) => user.id === id) || null,
+    ),
   };
 
   beforeEach(async () => {
@@ -53,7 +56,7 @@ describe('UserController', () => {
     expect(controller.findOne('1')).toEqual(user);
   });
 
-  it('findOne missing user', () => {
+  it('findOne missing user returns null', () => {
     expect(controller.findOne('3')).toBeNull();
   });
 });
