@@ -1,4 +1,4 @@
 export class LoginDataDto {
-  username: string;
+  userName: string;
   password: string;
 }

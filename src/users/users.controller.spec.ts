@@ -28,7 +28,8 @@ describe('UsersController', () => {
   const mockUsersService = {
     findAll: jest.fn((): User[] => users),
     findOne: jest.fn(
-      (id: string): User | null => users.find((user) => user.id === id) || null,
+      (where: { id: string } | { userName: string }): User | null =>
+        users.find((user) => user.id === id) || null,
     ),
   };
 
@@ -53,10 +54,10 @@ describe('UsersController', () => {
   });
 
   it('findOne existing user', () => {
-    expect(controller.findOne('1')).toEqual(user);
+    expect(controller.findOne({ id: '3' })).toEqual(user);
   });
 
   it('findOne missing user returns null', () => {
-    expect(controller.findOne('3')).toBeNull();
+    expect(controller.findOne({ id: '3' })).toBeNull();
   });
 });

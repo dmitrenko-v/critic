@@ -10,7 +10,7 @@ export class UsersController {
   @Get(':id')
   @UseInterceptors(NotFoundInterceptor)
   findOne(@Param('id') id: string): Promise<User | null> {
-    return this.usersService.findOne(id);
+    return this.usersService.findOne({ id });
   }
 
   @Get()

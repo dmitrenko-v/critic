@@ -59,11 +59,10 @@ describe('UsersService', () => {
       (
         where: { userName: string } | { id: string } | { email: string },
       ): User | null =>
-        users.find((user) =>
-          Object.keys(where).find(
-            (key) =>
-              where[key as keyof typeof where] === user[key as keyof User],
-          ),
+        users.find(
+          (user) =>
+            where[Object.keys(where)[0] as keyof typeof where] ===
+            user[Object.keys(where)[0] as keyof User],
         ) || null,
     ),
     save: jest.fn((dto: CreateUserDto) => ({ id: Date.now(), ...dto })),
@@ -89,11 +88,11 @@ describe('UsersService', () => {
   });
 
   it('findOne existing user', () => {
-    expect(service.findOne('1')).toEqual(user);
+    expect(service.findOne({ id: '1' })).toEqual(user);
   });
 
   it('findOne missing user returns null', () => {
-    expect(service.findOne('3')).toBeNull();
+    expect(service.findOne({ id: '3' })).toBeNull();
   });
 
   it('Create user returns dto with id', async () => {
