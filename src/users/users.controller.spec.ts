@@ -2,8 +2,9 @@ import { UsersController } from './users.controller';
 import { Test } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { User } from './users.entity';
+import { FindOptionsWhere } from 'typeorm';
 
-const users = [
+const users: User[] = [
   {
     id: '1',
     userName: 'userName1',
@@ -28,8 +29,14 @@ describe('UsersController', () => {
   const mockUsersService = {
     findAll: jest.fn((): User[] => users),
     findOne: jest.fn(
-      (where: { id: string } | { userName: string }): User | null =>
-        users.find((user) => user.id === id) || null,
+      (where: FindOptionsWhere<User>): User | null =>
+        users.find((user) =>
+          Object.keys(where).every(
+            (key) =>
+              user[key as keyof User] ===
+              where[key as keyof FindOptionsWhere<User>],
+          ),
+        ) || null,
     ),
   };
 
@@ -54,10 +61,10 @@ describe('UsersController', () => {
   });
 
   it('findOne existing user', () => {
-    expect(controller.findOne({ id: '3' })).toEqual(user);
+    expect(controller.findOne('1')).toEqual(user);
   });
 
   it('findOne missing user returns null', () => {
-    expect(controller.findOne({ id: '3' })).toBeNull();
+    expect(controller.findOne('3')).toBeNull();
   });
 });
