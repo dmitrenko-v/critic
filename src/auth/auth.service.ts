@@ -17,9 +17,9 @@ export class AuthService {
 
     if (!user) throw new UnauthorizedException();
 
-    bcrypt.compare(password, user?.password, function (err) {
-      if (err) throw new UnauthorizedException();
-    });
+    const match = await bcrypt.compare(password, user?.password);
+
+    if (!match) throw new UnauthorizedException();
 
     return {
       accessToken: this.jwtService.sign({ userName }),
