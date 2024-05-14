@@ -4,7 +4,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { CreateUserDto } from './dto/createUserDto';
 import { ConflictException } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
 
 const users: User[] = [
   {
@@ -33,11 +32,6 @@ const userToCreate: CreateUserDto = {
   email: 'email3@gmail.com',
   password: 'password3',
 };
-
-const hashedPassword: string = bcrypt.hashSync(
-  'password3',
-  +(process.env.SALT as string | number),
-);
 
 const sameEmailUser: CreateUserDto = {
   userName: 'userName4',
