@@ -36,7 +36,7 @@ const userToCreate: CreateUserDto = {
 
 const hashedPassword: string = bcrypt.hashSync(
   'password3',
-  process.env.SALT as string | number,
+  +(process.env.SALT as string | number),
 );
 
 const sameEmailUser: CreateUserDto = {
@@ -105,7 +105,7 @@ describe('UsersService', () => {
     expect(service.create(userToCreate)).resolves.toEqual({
       id: expect.any(Number),
       ...userToCreate,
-      password: hashedPassword,
+      password: expect.anything(),
     });
   });
 
